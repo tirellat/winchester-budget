@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
-import { Menu, X, ExternalLink } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 export default function Layout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -44,17 +44,6 @@ export default function Layout() {
           </div>
 
           <div className="flex items-center gap-4">
-            <a 
-              href="https://winchester.us/DocumentCenter/View/12174/FY26YellowSheet_Cerfitied_STM25" 
-              target="_blank" 
-              rel="noreferrer"
-              className="hidden sm:block"
-            >
-              <button className="bg-primary text-on-primary px-4 py-2 text-xs font-bold uppercase tracking-widest active:scale-95 duration-200 transition-all">
-                Source Data
-              </button>
-            </a>
-
             {/* Mobile Menu Toggle */}
             <button 
               className="md:hidden p-2 text-zinc-600 dark:text-zinc-400"
@@ -79,15 +68,6 @@ export default function Layout() {
                   <span className="uppercase text-xs tracking-widest font-black">{link.label}</span>
                 </NavLink>
               ))}
-              <a 
-                href="https://winchester.us/DocumentCenter/View/12174/FY26YellowSheet_Cerfitied_STM25" 
-                target="_blank" 
-                rel="noreferrer"
-                className="py-6 flex items-center justify-between text-primary font-black uppercase text-xs tracking-[0.2em]"
-              >
-                Download Source PDF
-                <ExternalLink size={14} />
-              </a>
             </div>
           </div>
         )}

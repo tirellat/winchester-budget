@@ -116,9 +116,6 @@ export default function SummaryPage() {
           </div>
           <h3 className="text-4xl font-black tracking-tight text-on-background mb-2">{formatCurrency(totalBudget, true)}</h3>
           <p className="text-xs text-secondary">vs {getFiscalYearLabel(prevFY.fiscalYear)}</p>
-          <div className="mt-6 flex justify-between items-center text-xs font-bold text-primary">
-            <a className="hover:underline tracking-widest" href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">SOURCE DATA</a>
-          </div>
         </div>
 
         <div className="bg-surface-container-lowest p-8 shadow-[0_20px_40px_rgba(26,28,28,0.06)] dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
@@ -130,9 +127,6 @@ export default function SummaryPage() {
           </div>
           <h3 className="text-4xl font-black tracking-tight text-on-background mb-2">{formatCurrency(latestFY.education, true)}</h3>
           <p className="text-xs text-secondary">{educationPct}% of total budget</p>
-          <div className="mt-6 flex justify-between items-center text-xs font-bold text-primary">
-            <a className="hover:underline tracking-widest" href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">SOURCE DATA</a>
-          </div>
         </div>
 
         <div className="bg-surface-container-lowest p-8 shadow-[0_20px_40px_rgba(26,28,28,0.06)] border-t-4 border-primary dark:bg-zinc-900">
@@ -144,9 +138,6 @@ export default function SummaryPage() {
           </div>
           <h3 className="text-4xl font-black tracking-tight text-on-background mb-2">{formatCurrency(totalMunicipal, true)}</h3>
           <p className="text-xs text-secondary">All non-education departments</p>
-          <div className="mt-6 flex justify-between items-center text-xs font-bold text-primary">
-            <a className="hover:underline tracking-widest" href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">SOURCE DATA</a>
-          </div>
         </div>
       </section>
 
@@ -318,11 +309,6 @@ export default function SummaryPage() {
               ))}
             </tbody>
           </table>
-        </div>
-        <div className="mt-8 flex justify-end">
-          <a href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">
-            <button className="bg-primary text-on-primary px-6 py-3 font-bold text-xs uppercase tracking-[0.2em] active:scale-95 duration-200">Full Source Data Export</button>
-          </a>
         </div>
       </section>
 
