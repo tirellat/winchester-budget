@@ -87,7 +87,14 @@ export default function SummaryPage() {
     <>
       <header className="mb-12 max-w-5xl flex flex-col md:flex-row justify-between md:items-end gap-6">
         <div>
-          <p className="text-primary font-bold uppercase tracking-[0.2em] text-xs mb-3">Fiscal Year {getFiscalYearLabel(latestFY.fiscalYear).replace('FY', '')} Performance</p>
+          <div className="flex items-center gap-3 mb-3">
+            <p className="text-primary font-bold uppercase tracking-[0.2em] text-xs">Fiscal Year {getFiscalYearLabel(latestFY.fiscalYear).replace('FY', '')} Performance</p>
+            {latestFY.isProjected && (
+              <span className="bg-primary text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest animate-pulse">
+                {latestFY.note || 'Projected'}
+              </span>
+            )}
+          </div>
           <h1 className="text-5xl md:text-6xl font-black text-on-background tracking-tighter leading-none mb-6">Winchester Budget Summary</h1>
           <p className="text-secondary text-lg max-w-2xl leading-relaxed">A high-level synthesis of municipal fiscal health, contrasting projected revenues against essential expenditures with surgical precision.</p>
         </div>
@@ -99,7 +106,9 @@ export default function SummaryPage() {
             onChange={(e) => setSelectedFYStr(e.target.value)}
           >
             {[...completeFYs].reverse().map(fy => (
-              <option key={fy.fiscalYear} value={fy.fiscalYear}>{getFiscalYearLabel(fy.fiscalYear)}</option>
+              <option key={fy.fiscalYear} value={fy.fiscalYear}>
+                {getFiscalYearLabel(fy.fiscalYear)} {fy.isProjected ? '(Projected)' : ''}
+              </option>
             ))}
           </select>
         </div>
@@ -285,7 +294,12 @@ export default function SummaryPage() {
               {[...completeFYs].reverse().map((fy) => (
                 <tr className="hover:bg-surface-container-low dark:hover:bg-zinc-800/50 transition-colors" key={fy.fiscalYear}>
                   <td className="py-5 font-bold text-on-background border-r border-surface-container dark:border-zinc-800/50 pr-4">
-                    {getFiscalYearLabel(fy.fiscalYear)}
+                    <div className="flex items-center gap-2">
+                      {getFiscalYearLabel(fy.fiscalYear)}
+                      {fy.isProjected && (
+                        <span className="bg-primary/10 text-primary text-[8px] font-black px-1.5 py-0.5 rounded-full uppercase tracking-tighter">Proj</span>
+                      )}
+                    </div>
                   </td>
                   <td className="py-5 text-sm text-right text-zinc-700 dark:text-zinc-300 pr-4">{formatCurrency(fy.education)}</td>
                   <td className="py-5 text-right border-r border-surface-container dark:border-zinc-800/50 pr-4">

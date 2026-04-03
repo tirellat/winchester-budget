@@ -129,6 +129,7 @@ export default function TrendsPage() {
       name: getFiscalYearLabel(fy.fiscalYear),
       education: fy.education,
       isProjected: fy.isProjected,
+      note: fy.note,
     }))
   }, [allFYs])
 
@@ -505,7 +506,7 @@ export default function TrendsPage() {
                         </div>
                         {d.payload.isProjected && (
                           <div className="mt-1 text-[10px] uppercase font-bold tracking-widest text-primary">
-                            Projected
+                            {d.payload.note || 'Projected'}
                           </div>
                         )}
                       </div>

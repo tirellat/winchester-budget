@@ -230,45 +230,46 @@
       "fiscalYear": "FY2026",
       "townMeeting": "2025STM",
       "sourceLink": "https://winchester.us/DocumentCenter/View/12174/FY26YellowSheet_Cerfitied_STM25",
-      "education": 70415639,
-      "municipal": null,
-      "dpw": null,
-      "publicSafety": null,
-      "healthSocialServices": null,
-      "cultureRecreation": null,
-      "generalGovernment": null,
+      "education": 70755718,
+      "municipal": 35310192,
+      "dpw": 10193288,
+      "publicSafety": 14053329,
+      "healthSocialServices": 1116608,
+      "cultureRecreation": 2661201,
+      "generalGovernment": 6945047,
       "percentChange": {
-        "education": 6.46,
-        "municipal": null,
-        "dpw": null,
-        "publicSafety": null,
-        "healthSocialServices": null,
-        "cultureRecreation": null,
-        "generalGovernment": null
+        "education": 7.60,
+        "municipal": 4.92,
+        "dpw": 2.31,
+        "publicSafety": 3.28,
+        "healthSocialServices": 8.90,
+        "cultureRecreation": 9.74,
+        "generalGovernment": 4.69
       },
-      "isProjected": true
+      "isProjected": false
     },
     {
       "schoolYear": "SY2026_2027",
       "fiscalYear": "FY2027",
       "townMeeting": "2026STM",
-      "education": 76270570,
-      "municipal": null,
-      "dpw": null,
-      "publicSafety": null,
-      "healthSocialServices": null,
-      "cultureRecreation": null,
-      "generalGovernment": null,
+      "education": 73365952,
+      "municipal": 36453969,
+      "dpw": 10426966,
+      "publicSafety": 14330594,
+      "healthSocialServices": 1113326,
+      "cultureRecreation": 2727513,
+      "generalGovernment": 7280946,
       "percentChange": {
-        "education": 8.31,
-        "municipal": null,
-        "dpw": null,
-        "publicSafety": null,
-        "healthSocialServices": null,
-        "cultureRecreation": null,
-        "generalGovernment": null
+        "education": 3.69,
+        "municipal": 3.24,
+        "dpw": 2.29,
+        "publicSafety": 1.97,
+        "healthSocialServices": -0.29,
+        "cultureRecreation": 2.49,
+        "generalGovernment": 4.84
       },
-      "isProjected": true
+      "isProjected": true,
+      "note": "Manager's Proposal"
     }
   ],
   "schoolData": {
@@ -331,8 +332,8 @@
     "fy2025RevisedPercentChange": 0.59,
     "notes": [
       "FY2025 has a revised education figure of $66,144,294.60 with 0.59% change (possibly a mid-year adjustment)",
-      "FY2026 and FY2027 only have education budget figures — municipal breakdowns are not yet available",
-      "FY2027 includes scattered health/social services figures ($66,575,598.45, $66,278,381.92, $288,566.02, $8,650.51) that may represent total budget or sub-category breakdowns"
+      "FY2026 and FY2027 figures updated from Manager's Budget Request (FY27)",
+      "FY2027 figures represent the Manager's Proposal"
     ]
   }
 }

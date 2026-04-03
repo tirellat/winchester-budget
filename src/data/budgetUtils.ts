@@ -14,6 +14,7 @@ export interface FiscalYearData {
   cultureRecreation: number | null
   generalGovernment: number | null
   isProjected?: boolean
+  note?: string
   percentChange: {
     education: number | null
     municipal: number | null

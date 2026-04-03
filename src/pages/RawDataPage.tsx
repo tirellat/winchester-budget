@@ -154,7 +154,11 @@ export default function RawDataPage() {
                   <tr key={fy.fiscalYear} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/50 transition-colors">
                     <td className="p-4 font-bold text-on-surface whitespace-nowrap">
                       {getFiscalYearLabel(fy.fiscalYear)}
-                      {fy.isProjected && <span className="ml-2 text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">Proj</span>}
+                      {fy.isProjected && (
+                        <span className="ml-2 text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full uppercase tracking-wider">
+                          {fy.note || 'Proj'}
+                        </span>
+                      )}
                     </td>
                     <td className="p-4 text-zinc-600 dark:text-zinc-400 whitespace-nowrap">{fy.schoolYear.replace('_', '-')}</td>
                     <td className="p-4 text-right text-zinc-900 dark:text-zinc-100 tabular-nums whitespace-nowrap">{formatCurrency(fy.education)}</td>
