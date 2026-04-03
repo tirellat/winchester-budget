@@ -1,0 +1,337 @@
+{
+  "metadata": {
+    "title": "Winchester Budget Growth: WPS vs. Municipal",
+    "source": "Budget Growth WPS versus Municipal.xlsx",
+    "lastUpdated": "2026-04-03",
+    "averageGrowthRates": {
+      "education": 4.79,
+      "municipal": 5.03
+    },
+    "sourceLinks": {
+      "FY2025": "https://winchester.us/DocumentCenter/View/11086/Finance-Committee---Yellow-Sheet",
+      "FY2026": "https://winchester.us/DocumentCenter/View/12174/FY26YellowSheet_Cerfitied_STM25"
+    }
+  },
+  "fiscalYears": [
+    {
+      "schoolYear": "SY2015_2016",
+      "fiscalYear": "FY2016",
+      "townMeeting": "2015STM",
+      "education": 43205637,
+      "municipal": 21683693,
+      "dpw": 6202012,
+      "publicSafety": 8923452,
+      "healthSocialServices": 598145,
+      "cultureRecreation": 1818855,
+      "generalGovernment": 4141229,
+      "percentChange": {
+        "education": null,
+        "municipal": null,
+        "dpw": null,
+        "publicSafety": null,
+        "healthSocialServices": null,
+        "cultureRecreation": null,
+        "generalGovernment": null
+      }
+    },
+    {
+      "schoolYear": "SY2016_2017",
+      "fiscalYear": "FY2017",
+      "townMeeting": "2016STM",
+      "education": 45190000,
+      "municipal": 22303437,
+      "dpw": 6389964,
+      "publicSafety": 8981179,
+      "healthSocialServices": 611845,
+      "cultureRecreation": 1879026,
+      "generalGovernment": 4441423,
+      "percentChange": {
+        "education": 4.59,
+        "municipal": 2.86,
+        "dpw": 3.03,
+        "publicSafety": 0.65,
+        "healthSocialServices": 2.29,
+        "cultureRecreation": 3.31,
+        "generalGovernment": 7.25
+      }
+    },
+    {
+      "schoolYear": "SY2017_2018",
+      "fiscalYear": "FY2018",
+      "townMeeting": "2017STM",
+      "education": 47419300,
+      "municipal": 22914547,
+      "dpw": 6671756,
+      "publicSafety": 9160106,
+      "healthSocialServices": 664310,
+      "cultureRecreation": 1940300,
+      "generalGovernment": 4478075,
+      "percentChange": {
+        "education": 4.93,
+        "municipal": 2.74,
+        "dpw": 4.41,
+        "publicSafety": 1.99,
+        "healthSocialServices": 8.57,
+        "cultureRecreation": 3.26,
+        "generalGovernment": 0.83
+      }
+    },
+    {
+      "schoolYear": "SY2018_2019",
+      "fiscalYear": "FY2019",
+      "townMeeting": "2018STM",
+      "education": 50272465,
+      "municipal": 24337447,
+      "dpw": 7009196,
+      "publicSafety": 10022055,
+      "healthSocialServices": 674797,
+      "cultureRecreation": 1973989,
+      "generalGovernment": 4657410,
+      "percentChange": {
+        "education": 6.02,
+        "municipal": 6.21,
+        "dpw": 5.06,
+        "publicSafety": 9.41,
+        "healthSocialServices": 1.58,
+        "cultureRecreation": 1.74,
+        "generalGovernment": 4.00
+      }
+    },
+    {
+      "schoolYear": "SY2019_2020",
+      "fiscalYear": "FY2020",
+      "townMeeting": "2019STM",
+      "education": 54231249,
+      "municipal": 25386442,
+      "dpw": 7207061,
+      "publicSafety": 10515282,
+      "healthSocialServices": 750816,
+      "cultureRecreation": 2024606,
+      "generalGovernment": 4888677,
+      "percentChange": {
+        "education": 7.87,
+        "municipal": 4.31,
+        "dpw": 2.82,
+        "publicSafety": 4.92,
+        "healthSocialServices": 11.27,
+        "cultureRecreation": 2.56,
+        "generalGovernment": 4.97
+      }
+    },
+    {
+      "schoolYear": "SY2020_2021",
+      "fiscalYear": "FY2021",
+      "townMeeting": "2020STM",
+      "education": 55734853,
+      "municipal": 26637859,
+      "dpw": 7986679,
+      "publicSafety": 10625262,
+      "healthSocialServices": 825136,
+      "cultureRecreation": 2065304,
+      "generalGovernment": 5135478,
+      "percentChange": {
+        "education": 2.77,
+        "municipal": 4.93,
+        "dpw": 10.82,
+        "publicSafety": 1.05,
+        "healthSocialServices": 9.90,
+        "cultureRecreation": 2.01,
+        "generalGovernment": 5.05
+      }
+    },
+    {
+      "schoolYear": "SY2021_2022",
+      "fiscalYear": "FY2022",
+      "townMeeting": "2021STM",
+      "education": 58153993,
+      "municipal": 29550772,
+      "dpw": 8322473,
+      "publicSafety": 12679178,
+      "healthSocialServices": 905132,
+      "cultureRecreation": 2174568,
+      "generalGovernment": 5469421,
+      "percentChange": {
+        "education": 4.34,
+        "municipal": 10.94,
+        "dpw": 4.20,
+        "publicSafety": 19.33,
+        "healthSocialServices": 9.69,
+        "cultureRecreation": 5.29,
+        "generalGovernment": 6.50
+      }
+    },
+    {
+      "schoolYear": "SY2022_2023",
+      "fiscalYear": "FY2023",
+      "townMeeting": "2022STM",
+      "education": 60904378,
+      "municipal": 30893737,
+      "dpw": 8725443,
+      "publicSafety": 12934961,
+      "healthSocialServices": 945472,
+      "cultureRecreation": 2291538,
+      "generalGovernment": 5996323,
+      "percentChange": {
+        "education": 4.73,
+        "municipal": 4.54,
+        "dpw": 4.84,
+        "publicSafety": 2.02,
+        "healthSocialServices": 4.46,
+        "cultureRecreation": 5.38,
+        "generalGovernment": 9.63
+      }
+    },
+    {
+      "schoolYear": "SY2023_2024",
+      "fiscalYear": "FY2024",
+      "townMeeting": "2023STM",
+      "education": 63194386,
+      "municipal": 32367112,
+      "dpw": 9322633,
+      "publicSafety": 13296119,
+      "healthSocialServices": 995624,
+      "cultureRecreation": 2332007,
+      "generalGovernment": 6420729,
+      "percentChange": {
+        "education": 3.76,
+        "municipal": 4.77,
+        "dpw": 6.84,
+        "publicSafety": 2.79,
+        "healthSocialServices": 5.30,
+        "cultureRecreation": 1.77,
+        "generalGovernment": 7.08
+      }
+    },
+    {
+      "schoolYear": "SY2024_2025",
+      "fiscalYear": "FY2025",
+      "townMeeting": "2024STM",
+      "sourceLink": "https://winchester.us/DocumentCenter/View/11086/Finance-Committee---Yellow-Sheet",
+      "education": 65756668,
+      "municipal": 33654895,
+      "dpw": 9963014,
+      "publicSafety": 13607538,
+      "healthSocialServices": 1025392,
+      "cultureRecreation": 2424944,
+      "generalGovernment": 6634007,
+      "percentChange": {
+        "education": 4.05,
+        "municipal": 3.98,
+        "dpw": 6.87,
+        "publicSafety": 2.34,
+        "healthSocialServices": 2.99,
+        "cultureRecreation": 3.99,
+        "generalGovernment": 3.32
+      }
+    },
+    {
+      "schoolYear": "SY2025_2026",
+      "fiscalYear": "FY2026",
+      "townMeeting": "2025STM",
+      "sourceLink": "https://winchester.us/DocumentCenter/View/12174/FY26YellowSheet_Cerfitied_STM25",
+      "education": 70415639,
+      "municipal": null,
+      "dpw": null,
+      "publicSafety": null,
+      "healthSocialServices": null,
+      "cultureRecreation": null,
+      "generalGovernment": null,
+      "percentChange": {
+        "education": 6.46,
+        "municipal": null,
+        "dpw": null,
+        "publicSafety": null,
+        "healthSocialServices": null,
+        "cultureRecreation": null,
+        "generalGovernment": null
+      },
+      "isProjected": true
+    },
+    {
+      "schoolYear": "SY2026_2027",
+      "fiscalYear": "FY2027",
+      "townMeeting": "2026STM",
+      "education": 76270570,
+      "municipal": null,
+      "dpw": null,
+      "publicSafety": null,
+      "healthSocialServices": null,
+      "cultureRecreation": null,
+      "generalGovernment": null,
+      "percentChange": {
+        "education": 8.31,
+        "municipal": null,
+        "dpw": null,
+        "publicSafety": null,
+        "healthSocialServices": null,
+        "cultureRecreation": null,
+        "generalGovernment": null
+      },
+      "isProjected": true
+    }
+  ],
+  "schoolData": {
+    "middleSchool": {
+      "name": "McCall Middle School",
+      "enrollment": 1036,
+      "totalBudget": 9111862.39,
+      "perPupilSpend": 8795.23,
+      "fte": 80.87,
+      "studentsPerFTE": 12.81,
+      "costPerFTE": 112672.96
+    },
+    "highSchool": {
+      "name": "Winchester High School",
+      "enrollment": 1339,
+      "totalBudget": 11037645.37,
+      "perPupilSpend": 8243.20,
+      "fte": 93.53,
+      "studentsPerFTE": 14.32,
+      "costPerFTE": 118011.82
+    },
+    "elementarySchools": [
+      {
+        "name": "Ambrose",
+        "totalBudget": 3761963.27,
+        "classrooms": 37
+      },
+      {
+        "name": "Lincoln",
+        "totalBudget": 3589206.07,
+        "classrooms": 36
+      },
+      {
+        "name": "Lynch",
+        "totalBudget": 3775627.53,
+        "classrooms": 30.58
+      },
+      {
+        "name": "Muraco",
+        "totalBudget": 3788574.28,
+        "classrooms": 36.5
+      },
+      {
+        "name": "Vinson Owen",
+        "totalBudget": 3670173.16,
+        "classrooms": 35.5
+      }
+    ],
+    "districtTotals": {
+      "totalEnrollment": 1884,
+      "totalBudget": 18585544.31,
+      "perPupilSpend": 9864.94,
+      "totalFTE": 175.58,
+      "studentsPerFTE": 10.73,
+      "costPerFTE": 105852.29
+    }
+  },
+  "supplementalData": {
+    "fy2025EducationRevised": 66144294.60,
+    "fy2025RevisedPercentChange": 0.59,
+    "notes": [
+      "FY2025 has a revised education figure of $66,144,294.60 with 0.59% change (possibly a mid-year adjustment)",
+      "FY2026 and FY2027 only have education budget figures — municipal breakdowns are not yet available",
+      "FY2027 includes scattered health/social services figures ($66,575,598.45, $66,278,381.92, $288,566.02, $8,650.51) that may represent total budget or sub-category breakdowns"
+    ]
+  }
+}
