@@ -198,15 +198,15 @@ export default function WPSBudgetPage() {
             Proportional Distribution
           </p>
           
-          <div className="flex-grow">
+          <div className="flex-grow min-h-[300px]">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
+              <PieChart margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
                 <Pie
                   data={isDrilledDown ? orgPieData : districtPieData}
                   cx="50%"
                   cy="50%"
-                  innerRadius={70}
-                  outerRadius={110}
+                  innerRadius={65}
+                  outerRadius={100}
                   paddingAngle={4}
                   dataKey="value"
                   stroke="none"
