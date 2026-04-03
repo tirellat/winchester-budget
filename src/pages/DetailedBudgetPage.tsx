@@ -13,8 +13,8 @@ import {
   getOrgName,
   formatCurrency,
   parseCurrency,
-  DetailedBudgetSummary,
-  DetailedBudgetItem
+  type DetailedBudgetSummary,
+  type DetailedBudgetItem
 } from '../data/budgetUtils';
 
 const COLORS = [
