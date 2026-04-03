@@ -384,12 +384,12 @@ export default function WPSBudgetPage() {
                       <div className="flex items-center justify-end gap-2">FY26 Rec <SortIcon column="FY26 Recommended Budget ($)" /></div>
                     </th>
                     <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors" onClick={() => handleSort('Change ($)')}>
-                      <div className="flex items-center justify-end gap-2">Change <SortIcon column="Change ($)" /></div>
+                      <div className="flex items-center justify-end gap-2">Change ($/%) <SortIcon column="Change ($)" /></div>
                     </th>
                   </>
                 ) : (
                   <>
-                    <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors" onClick={() => handleSort('Cost Center (Org)')}>
+                    <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" onClick={() => handleSort('Cost Center (Org)')}>
                       <div className="flex items-center gap-2">Cost Center <SortIcon column="Cost Center (Org)" /></div>
                     </th>
                     <th className="px-4 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors" onClick={() => handleSort('FY26 Proposed Personnel Services')}>
@@ -402,7 +402,7 @@ export default function WPSBudgetPage() {
                       <div className="flex items-center justify-end gap-2">FY26 Total <SortIcon column="FY26 Proposed Total Spending" /></div>
                     </th>
                     <th className="px-8 py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors" onClick={() => handleSort('% Change FY25 VS FY26 Budget')}>
-                      <div className="flex items-center justify-end gap-2">Growth <SortIcon column="% Change FY25 VS FY26 Budget" /></div>
+                      <div className="flex items-center justify-end gap-2">Growth ($/%) <SortIcon column="% Change FY25 VS FY26 Budget" /></div>
                     </th>
                   </>
                 )}
@@ -411,7 +411,9 @@ export default function WPSBudgetPage() {
             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
               {isDrilledDown ? (
                 sortedDetails.map((item, idx) => {
-                  const change = parseCurrency(item["Change ($)"]);
+                  const changeVal = parseCurrency(item["Change ($)"]);
+                  const prevVal = parseCurrency(item["FY25 Budget ($)"]);
+                  const pctChange = prevVal !== 0 ? (changeVal / prevVal * 100).toFixed(1) : "0.0";
                   return (
                     <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group">
                       <td className="px-8 py-4">
@@ -422,9 +424,14 @@ export default function WPSBudgetPage() {
                       <td className="px-4 py-4 text-sm font-medium text-zinc-500 text-right">{formatCurrency(parseCurrency(item["FY25 Budget ($)"]))}</td>
                       <td className="px-4 py-4 text-sm font-black text-on-background text-right">{formatCurrency(parseCurrency(item["FY26 Recommended Budget ($)"]))}</td>
                       <td className="px-8 py-4 text-right">
-                        <div className={`text-xs font-black flex items-center justify-end gap-1 ${change > 0 ? 'text-red-600' : change < 0 ? 'text-green-600' : 'text-zinc-400'}`}>
-                          {change > 0 ? <TrendingUp className="w-3 h-3" /> : change < 0 ? <TrendingDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
-                          {formatCurrency(change)}
+                        <div className={`text-xs font-black flex flex-col items-end ${changeVal > 0 ? 'text-red-600' : changeVal < 0 ? 'text-green-600' : 'text-zinc-400'}`}>
+                          <div className="flex items-center gap-1">
+                            {changeVal > 0 ? <TrendingUp className="w-3 h-3" /> : changeVal < 0 ? <TrendingDown className="w-3 h-3" /> : <Minus className="w-3 h-3" />}
+                            {formatCurrency(changeVal)}
+                          </div>
+                          <div className="text-[10px] opacity-70">
+                            {changeVal > 0 ? '+' : ''}{pctChange}%
+                          </div>
                         </div>
                       </td>
                     </tr>
@@ -433,12 +440,12 @@ export default function WPSBudgetPage() {
               ) : (
                 sortedSummary.map((s, idx) => {
                   const id = s["Cost Center (Org)"].match(/\((\d+)\)/)?.[1];
-                  const growth = parseFloat(s["% Change FY25 VS FY26 Budget"].replace('%', ''));
+                  const growthPct = s["% Change FY25 VS FY26 Budget"];
+                  const growthAmt = parseCurrency(s["$ CHANGE FY25 VS FY26 Budget +/-"]);
                   return (
                     <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer" onClick={() => navigate(`/wps/${id}`)}>
                       <td className="px-8 py-5">
                         <Link to={`/wps/${id}`} className="text-base font-black text-on-background group-hover:text-primary transition-colors flex items-center gap-2">
-
                           {s["Cost Center (Org)"].split(' (')[0]}
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </Link>
@@ -448,9 +455,14 @@ export default function WPSBudgetPage() {
                       <td className="px-4 py-5 text-sm font-medium text-zinc-500 text-right">{formatCurrency(parseCurrency(s["FY26 Proposed Other Expenses"]))}</td>
                       <td className="px-4 py-5 text-base font-black text-on-background text-right">{formatCurrency(parseCurrency(s["FY26 Proposed Total Spending"]))}</td>
                       <td className="px-8 py-5 text-right">
-                        <span className={`inline-block px-2 py-1 text-[10px] font-black rounded-full ${growth > 5 ? 'bg-red-50 text-red-700' : growth > 0 ? 'bg-green-50 text-green-700' : 'bg-zinc-100 text-zinc-600'}`}>
-                          {s["% Change FY25 VS FY26 Budget"]}
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <div className={`text-sm font-black ${growthAmt > 0 ? 'text-red-600' : growthAmt < 0 ? 'text-green-600' : 'text-zinc-600'}`}>
+                            {formatCurrency(growthAmt)}
+                          </div>
+                          <span className={`inline-block px-2 py-0.5 mt-1 text-[10px] font-black rounded-full ${parseFloat(growthPct) > 5 ? 'bg-red-50 text-red-700' : parseFloat(growthPct) > 0 ? 'bg-green-50 text-green-700' : 'bg-zinc-100 text-zinc-600'}`}>
+                            {growthPct}
+                          </span>
+                        </div>
                       </td>
                     </tr>
                   );

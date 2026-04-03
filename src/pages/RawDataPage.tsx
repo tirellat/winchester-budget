@@ -188,24 +188,36 @@ export default function RawDataPage() {
                     <div className="flex items-center justify-end gap-2 uppercase tracking-widest text-[10px]">FY26 Rec <SortIcon column="FY26 Recommended Budget ($)" /></div>
                   </th>
                   <th className="p-3 font-bold text-zinc-900 dark:text-zinc-100 text-right cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" onClick={() => handleSort('Change ($)')}>
-                    <div className="flex items-center justify-end gap-2 uppercase tracking-widest text-[10px]">Change ($) <SortIcon column="Change ($)" /></div>
+                    <div className="flex items-center justify-end gap-2 uppercase tracking-widest text-[10px]">Change ($/%) <SortIcon column="Change ($)" /></div>
                   </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-                {filteredAndSortedDetails.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/50 transition-colors">
-                    <td className="p-3 text-zinc-500 font-bold uppercase">{item.orgName}</td>
-                    <td className="p-3">
-                      <div className="font-black text-on-surface">{item["Account Description"]}</div>
-                      <div className="text-[9px] text-zinc-400 uppercase">ORG {item.ORG} • OBJ {item.OBJ}</div>
-                    </td>
-                    <td className="p-3 text-right tabular-nums">{item["FY24 Actuals"]}</td>
-                    <td className="p-3 text-right tabular-nums font-medium">{item["FY25 Budget ($)"]}</td>
-                    <td className="p-3 text-right tabular-nums font-black text-primary">{item["FY26 Recommended Budget ($)"]}</td>
-                    <td className="p-3 text-right tabular-nums">{item["Change ($)"]}</td>
-                  </tr>
-                ))}
+                {filteredAndSortedDetails.map((item, idx) => {
+                  const changeAmt = parseCurrency(item["Change ($)"]);
+                  const prevAmt = parseCurrency(item["FY25 Budget ($)"]);
+                  const pctChange = prevAmt !== 0 ? (changeAmt / prevAmt * 100).toFixed(1) : "0.0";
+                  return (
+                    <tr key={idx} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/50 transition-colors">
+                      <td className="p-3 text-zinc-500 font-bold uppercase">{item.orgName}</td>
+                      <td className="p-3">
+                        <div className="font-black text-on-surface">{item["Account Description"]}</div>
+                        <div className="text-[9px] text-zinc-400 uppercase">ORG {item.ORG} • OBJ {item.OBJ}</div>
+                      </td>
+                      <td className="p-3 text-right tabular-nums">{item["FY24 Actuals"]}</td>
+                      <td className="p-3 text-right tabular-nums font-medium">{item["FY25 Budget ($)"]}</td>
+                      <td className="p-3 text-right tabular-nums font-black text-primary">{item["FY26 Recommended Budget ($)"]}</td>
+                      <td className="p-3 text-right tabular-nums">
+                        <div className={`font-medium ${changeAmt > 0 ? 'text-red-600' : changeAmt < 0 ? 'text-green-600' : 'text-zinc-500'}`}>
+                          {item["Change ($)"]}
+                        </div>
+                        <div className="text-[9px] text-zinc-400 font-bold mt-0.5">
+                          {changeAmt > 0 ? '+' : ''}{pctChange}%
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           )}
