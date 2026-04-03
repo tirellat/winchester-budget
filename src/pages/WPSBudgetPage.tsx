@@ -438,6 +438,7 @@ export default function WPSBudgetPage() {
                     <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer" onClick={() => navigate(`/wps/${id}`)}>
                       <td className="px-8 py-5">
                         <Link to={`/wps/${id}`} className="text-base font-black text-on-background group-hover:text-primary transition-colors flex items-center gap-2">
+
                           {s["Cost Center (Org)"].split(' (')[0]}
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </Link>
