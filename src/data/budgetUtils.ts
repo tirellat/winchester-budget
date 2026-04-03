@@ -1,4 +1,5 @@
 import budgetData from '../data/budget_data.json'
+import detailedBudgetData from '../data/fy26_budget_details.json'
 
 export interface FiscalYearData {
   schoolYear: string
@@ -67,15 +68,83 @@ export interface BudgetDataSet {
   }
 }
 
+export interface DetailedBudgetSummary {
+  "Cost Center (Org)": string
+  "FY25 Budgeted Personnel Services": string
+  "FY25 Budgeted Expenses": string
+  "FY25 Approved Total Budget": string
+  "FY26 Proposed Personnel Services": string
+  "FY26 Proposed Other Expenses": string
+  "FY26 Proposed Total Spending": string
+  "$ CHANGE FY25 VS FY26 Budget +/-": string
+  "FY25 Budgeted FTE": string
+  "FY26 Proposed FTE": string
+  "% Change FY25 VS FY26 Budget": string
+}
+
+export interface DetailedBudgetItem {
+  ORG: string
+  OBJ: string
+  "Account Description": string
+  "FY22 Actuals": string
+  "FY23 Actuals": string
+  "FY24 Actuals": string
+  "FY25 Budget ($)": string
+  "FY25 Budget (FTE)": string
+  "FY26 Recommended Budget ($)": string
+  "FY26 Recommended Budget (FTE)": string
+  "Change ($)": string
+  "Change (FTE)": string
+}
+
+export interface DetailedBudgetDataSet {
+  summary: DetailedBudgetSummary[]
+  details: Record<string, DetailedBudgetItem[]>
+}
+
 export function getBudgetData(): BudgetDataSet {
   return budgetData as BudgetDataSet
 }
 
+export function getDetailedBudgetData(): DetailedBudgetDataSet {
+  return detailedBudgetData as DetailedBudgetDataSet
+}
+
+export function getBudgetSummary(): DetailedBudgetSummary[] {
+  return getDetailedBudgetData().summary
+}
+
+export function getOrgDetails(orgId: string): DetailedBudgetItem[] {
+  const data = getDetailedBudgetData()
+  // Find the org by ID (e.g., "111") in the keys of the details object
+  const key = Object.keys(data.details).find(k => k.includes(`(${orgId})`))
+  return key ? data.details[key] : []
+}
+
+export function getOrgName(orgId: string): string {
+  const summary = getBudgetSummary()
+  const item = summary.find(s => s["Cost Center (Org)"].includes(`(${orgId})`))
+  return item ? item["Cost Center (Org)"].split(' (')[0] : orgId
+}
+
+export function parseCurrency(value: string): number {
+  if (!value) return 0
+  // Handle strings like "(1,234.56)" or "1,234.56" or "0.00"
+  const clean = value.replace(/[$,()]/g, '')
+  const num = parseFloat(clean)
+  return value.includes('(') ? -num : num
+}
+
 export function formatCurrency(value: number, compact = false): string {
   if (compact) {
-    if (value >= 1_000_000_000) return `$${(value / 1_000_000_000).toFixed(1)}B`
-    if (value >= 1_000_000) return `$${(value / 1_000_000).toFixed(1)}M`
-    if (value >= 1_000) return `$${(value / 1_000).toFixed(0)}K`
+    const absValue = Math.abs(value)
+    let formatted = ''
+    if (absValue >= 1_000_000_000) formatted = `$${(absValue / 1_000_000_000).toFixed(1)}B`
+    else if (absValue >= 1_000_000) formatted = `$${(absValue / 1_000_000).toFixed(1)}M`
+    else if (absValue >= 1_000) formatted = `$${(absValue / 1_000).toFixed(0)}K`
+    else formatted = `$${absValue.toFixed(0)}`
+    
+    return value < 0 ? `(${formatted})` : formatted
   }
   return new Intl.NumberFormat('en-US', {
     style: 'currency',

@@ -1,12 +1,9 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   PieChart, Pie, Cell, ResponsiveContainer, Tooltip,
   BarChart, Bar, XAxis, YAxis, CartesianGrid,
 } from 'recharts'
-import {
-  DollarSign, TrendingUp, School, Building2,
-  ShieldCheck, Trees, Heart, Landmark, FileText,
-} from 'lucide-react'
+
 import {
   getBudgetData,
   getLatestCompleteFY,
@@ -39,16 +36,24 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export default function SummaryPage() {
   const data = getBudgetData()
-  const latestFY = getLatestCompleteFY()
+  const completeFYs = data.fiscalYears.filter(fy => fy.municipal !== null)
+  
+  const defaultFY = getLatestCompleteFY()
+  const [selectedFYStr, setSelectedFYStr] = useState(defaultFY.fiscalYear)
+  
+  const latestFY = useMemo(() => 
+    completeFYs.find(fy => fy.fiscalYear === selectedFYStr) || defaultFY,
+  [selectedFYStr, completeFYs, defaultFY])
+  
   const totalBudget = getTotalBudget(latestFY)!
   const totalMunicipal = getTotalMunicipal(latestFY)!
   const educationPct = ((latestFY.education / totalBudget) * 100).toFixed(1)
 
   // Previous FY for comparison
-  const completeFYs = data.fiscalYears.filter(fy => fy.municipal !== null)
-  const prevFY = completeFYs[completeFYs.length - 2]
+  const latestIndex = completeFYs.findIndex(fy => fy.fiscalYear === latestFY.fiscalYear)
+  const prevFY = latestIndex > 0 ? completeFYs[latestIndex - 1] : completeFYs[latestIndex]
   const prevTotal = getTotalBudget(prevFY)!
-  const totalGrowth = ((totalBudget - prevTotal) / prevTotal * 100).toFixed(2)
+  const totalGrowth = prevTotal ? ((totalBudget - prevTotal) / prevTotal * 100).toFixed(2) : "0.00"
 
   // Pie chart data
   const pieData = useMemo(() => [
@@ -77,119 +82,95 @@ export default function SummaryPage() {
     }))
   }, [latestFY, prevFY])
 
-  // School breakdown cards
-  const schoolData = data.schoolData
 
   return (
     <>
-      {/* Page Header */}
-      <div className="page-header">
-        <div className="page-badge">
-          <FileText size={12} />
-          {getFiscalYearLabel(latestFY.fiscalYear)} Budget
+      <header className="mb-12 max-w-5xl flex flex-col md:flex-row justify-between md:items-end gap-6">
+        <div>
+          <p className="text-primary font-bold uppercase tracking-[0.2em] text-xs mb-3">Fiscal Year {getFiscalYearLabel(latestFY.fiscalYear).replace('FY', '')} Performance</p>
+          <h1 className="text-5xl md:text-6xl font-black text-on-background tracking-tighter leading-none mb-6">Winchester Budget Summary</h1>
+          <p className="text-secondary text-lg max-w-2xl leading-relaxed">A high-level synthesis of municipal fiscal health, contrasting projected revenues against essential expenditures with surgical precision.</p>
         </div>
-        <div className="page-header-top">
-          <div>
-            <h1 className="page-title">{getFiscalYearLabel(latestFY.fiscalYear)} Performance</h1>
-            <p className="page-subtitle">
-              A high-level synthesis of municipal fiscal health, contrasting projected revenues against essential expenditures with surgical precision.
-            </p>
-          </div>
+        <div className="flex flex-col gap-1 w-full md:w-48">
+          <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-secondary">Select Fiscal Year</label>
+          <select 
+            className="bg-surface-container border border-outline dark:bg-zinc-800 dark:border-zinc-700 text-on-surface p-2 rounded-md font-medium outline-none focus:ring-2 focus:ring-primary/50"
+            value={selectedFYStr}
+            onChange={(e) => setSelectedFYStr(e.target.value)}
+          >
+            {[...completeFYs].reverse().map(fy => (
+              <option key={fy.fiscalYear} value={fy.fiscalYear}>{getFiscalYearLabel(fy.fiscalYear)}</option>
+            ))}
+          </select>
         </div>
-      </div>
+      </header>
 
-      {/* Hero Metrics */}
-      <div className="metrics-grid" id="hero-metrics">
-        <div className="metric-card">
-          <div className="metric-card-label">Total Budget</div>
-          <div className="metric-card-value">{formatCurrency(totalBudget, true)}</div>
-          <div className="metric-card-meta">Approved at Special Town Meeting</div>
-          <div className={`metric-card-change metric-card-change--up`}>
-            <TrendingUp size={12} />
-            +{totalGrowth}% vs {getFiscalYearLabel(prevFY.fiscalYear)}
+      {/* KPI Grid: Tonal Layering */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+        <div className="bg-surface-container-lowest p-8 shadow-[0_20px_40px_rgba(26,28,28,0.06)] dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex justify-between items-start mb-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-secondary">Total Budget</p>
+            <span className="bg-success/10 text-success px-2 py-1 text-[10px] font-bold rounded-full flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">trending_up</span> +{totalGrowth}%
+            </span>
+          </div>
+          <h3 className="text-4xl font-black tracking-tight text-on-background mb-2">{formatCurrency(totalBudget, true)}</h3>
+          <p className="text-xs text-secondary">vs {getFiscalYearLabel(prevFY.fiscalYear)}</p>
+          <div className="mt-6 flex justify-between items-center text-xs font-bold text-primary">
+            <a className="hover:underline tracking-widest" href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">SOURCE DATA</a>
           </div>
         </div>
-        <div className="metric-card">
-          <div className="metric-card-label">Education (WPS)</div>
-          <div className="metric-card-value">{formatCurrency(latestFY.education, true)}</div>
-          <div className="metric-card-meta">{educationPct}% of total budget</div>
-          <div className={`metric-card-change ${latestFY.percentChange.education! > 5 ? 'metric-card-change--down' : 'metric-card-change--up'}`}>
-            {latestFY.percentChange.education! > 5 ? <TrendingUp size={12} /> : <TrendingUp size={12} />}
-            {formatPercent(latestFY.percentChange.education)}
-          </div>
-        </div>
-        <div className="metric-card">
-          <div className="metric-card-label">Municipal Operations</div>
-          <div className="metric-card-value">{formatCurrency(totalMunicipal, true)}</div>
-          <div className="metric-card-meta">All non-education departments</div>
-          <div className="metric-card-change metric-card-change--up">
-            <TrendingUp size={12} />
-            {formatPercent(latestFY.percentChange.municipal)}
-          </div>
-        </div>
-      </div>
 
-      {/* Quick Stats */}
-      <div className="quick-stats" id="quick-stats">
-        <div className="quick-stat">
-          <div className="quick-stat-icon quick-stat-icon--primary">
-            <School size={20} />
+        <div className="bg-surface-container-lowest p-8 shadow-[0_20px_40px_rgba(26,28,28,0.06)] dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800">
+          <div className="flex justify-between items-start mb-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-secondary">Education (WPS)</p>
+            <span className={latestFY.percentChange.education! > 5 ? "bg-error/10 text-error px-2 py-1 text-[10px] font-bold rounded-full flex items-center gap-1" : "bg-success/10 text-success px-2 py-1 text-[10px] font-bold rounded-full flex items-center gap-1"}>
+              <span className="material-symbols-outlined text-xs">{latestFY.percentChange.education! > 5 ? "trending_up" : "check_circle"}</span> {formatPercent(latestFY.percentChange.education)}
+            </span>
           </div>
-          <div className="quick-stat-content">
-            <span className="quick-stat-value">{formatCurrency(latestFY.education, true)}</span>
-            <span className="quick-stat-label">Education</span>
-          </div>
-        </div>
-        <div className="quick-stat">
-          <div className="quick-stat-icon quick-stat-icon--secondary">
-            <ShieldCheck size={20} />
-          </div>
-          <div className="quick-stat-content">
-            <span className="quick-stat-value">{formatCurrency(latestFY.publicSafety!, true)}</span>
-            <span className="quick-stat-label">Public Safety</span>
+          <h3 className="text-4xl font-black tracking-tight text-on-background mb-2">{formatCurrency(latestFY.education, true)}</h3>
+          <p className="text-xs text-secondary">{educationPct}% of total budget</p>
+          <div className="mt-6 flex justify-between items-center text-xs font-bold text-primary">
+            <a className="hover:underline tracking-widest" href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">SOURCE DATA</a>
           </div>
         </div>
-        <div className="quick-stat">
-          <div className="quick-stat-icon quick-stat-icon--tertiary">
-            <Trees size={20} />
-          </div>
-          <div className="quick-stat-content">
-            <span className="quick-stat-value">{formatCurrency(latestFY.dpw!, true)}</span>
-            <span className="quick-stat-label">DPW</span>
-          </div>
-        </div>
-        <div className="quick-stat">
-          <div className="quick-stat-icon quick-stat-icon--success">
-            <Heart size={20} />
-          </div>
-          <div className="quick-stat-content">
-            <span className="quick-stat-value">{formatCurrency(latestFY.healthSocialServices!, true)}</span>
-            <span className="quick-stat-label">Health & Social</span>
-          </div>
-        </div>
-      </div>
 
-      {/* Expenditure Split */}
-      <div className="two-col">
-        <div className="section-block" id="expenditure-split">
-          <div className="section-header">
-            <div>
-              <h2 className="section-title">Expenditure Split</h2>
-              <p className="section-subtitle">
-                Education ratio — the largest single expenditure item remains municipal schools.
-              </p>
+        <div className="bg-surface-container-lowest p-8 shadow-[0_20px_40px_rgba(26,28,28,0.06)] border-t-4 border-primary dark:bg-zinc-900">
+          <div className="flex justify-between items-start mb-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-secondary">Municipal Operations</p>
+            <span className="bg-success/10 text-success px-2 py-1 text-[10px] font-bold rounded-full flex items-center gap-1">
+              <span className="material-symbols-outlined text-xs">trending_up</span> {formatPercent(latestFY.percentChange.municipal)}
+            </span>
+          </div>
+          <h3 className="text-4xl font-black tracking-tight text-on-background mb-2">{formatCurrency(totalMunicipal, true)}</h3>
+          <p className="text-xs text-secondary">All non-education departments</p>
+          <div className="mt-6 flex justify-between items-center text-xs font-bold text-primary">
+            <a className="hover:underline tracking-widest" href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">SOURCE DATA</a>
+          </div>
+        </div>
+      </section>
+
+      {/* Asymmetric Data Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-16">
+        
+        {/* Expenditure Split (Bento Card Style) */}
+        <div className="lg:col-span-5 flex flex-col gap-8">
+          <div className="bg-surface-container-low p-8 shadow-[0_20px_40px_rgba(26,28,28,0.06)] dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 min-h-[400px] flex flex-col relative">
+            <h2 className="text-xl font-black tracking-tight mb-4 text-on-background">Expenditure Split</h2>
+            <div className="mb-4">
+              <p className="text-xs font-bold uppercase tracking-widest text-secondary mb-1">Functional Sub-Division</p>
+              <p className="text-sm text-on-background leading-relaxed">The largest single expenditure item remains municipal schools, driven by sustained enrollment growth and specialized service costs.</p>
             </div>
-          </div>
-          <div className="chart-container">
-            <div className="chart-wrapper" style={{ height: 320 }}>
+            
+            <div className="flex-grow w-full mt-4 h-[250px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={pieData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={70}
-                    outerRadius={130}
+                    innerRadius={60}
+                    outerRadius={100}
                     paddingAngle={2}
                     dataKey="value"
                     stroke="none"
@@ -203,18 +184,16 @@ export default function SummaryPage() {
                       if (!active || !payload?.length) return null
                       const d = payload[0]
                       return (
-                        <div className="custom-tooltip">
-                          <div className="custom-tooltip-label">{d.name}</div>
-                          <div className="custom-tooltip-row">
-                            <div className="custom-tooltip-dot" style={{ background: d.payload.color }} />
-                            <span className="custom-tooltip-value">
+                        <div className="bg-white dark:bg-zinc-800 p-3 shadow-lg border border-zinc-200 dark:border-zinc-700 text-sm">
+                          <div className="font-bold mb-1 text-zinc-900 dark:text-zinc-100">{d.name}</div>
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full" style={{ background: d.payload.color }} />
+                            <span className="font-medium text-zinc-700 dark:text-zinc-300">
                               {formatCurrency(d.value as number)}
                             </span>
                           </div>
-                          <div className="custom-tooltip-row">
-                            <span className="custom-tooltip-name">
-                              {((d.value as number) / totalBudget * 100).toFixed(1)}% of total
-                            </span>
+                          <div className="text-xs text-zinc-500 mt-1">
+                            {((d.value as number) / totalBudget * 100).toFixed(1)}% of total
                           </div>
                         </div>
                       )
@@ -223,11 +202,12 @@ export default function SummaryPage() {
                 </PieChart>
               </ResponsiveContainer>
             </div>
-            <div className="chart-legend">
+
+            <div className="flex flex-wrap gap-3 mt-4">
               {pieData.map((entry, i) => (
-                <div className="legend-chip" key={i}>
-                  <div className="legend-chip-dot" style={{ background: entry.color }} />
-                  <span className="legend-chip-label">{entry.name}</span>
+                <div className="flex items-center gap-1.5 text-xs text-secondary" key={i}>
+                  <div className="w-2.5 h-2.5 rounded-full" style={{ background: entry.color }} />
+                  <span>{entry.name}</span>
                 </div>
               ))}
             </div>
@@ -235,204 +215,118 @@ export default function SummaryPage() {
         </div>
 
         {/* Year-over-Year Comparison */}
-        <div className="section-block" id="yoy-comparison">
-          <div className="section-header">
+        <div className="lg:col-span-7 bg-white dark:bg-zinc-900 p-10 shadow-[0_20px_40px_rgba(26,28,28,0.06)] border border-zinc-200 dark:border-zinc-800 min-h-[400px] flex flex-col">
+          <div className="flex justify-between items-end mb-8">
             <div>
-              <h2 className="section-title">Expenditure by Function</h2>
-              <p className="section-subtitle">
-                Comparison: {getFiscalYearLabel(prevFY.fiscalYear)} vs. {getFiscalYearLabel(latestFY.fiscalYear)}
-              </p>
+              <h2 className="text-2xl font-black tracking-tighter mb-1 text-on-background">Expenditure by Function</h2>
+              <p className="text-sm text-secondary">Comparison: {getFiscalYearLabel(prevFY.fiscalYear)} vs. {getFiscalYearLabel(latestFY.fiscalYear)}</p>
             </div>
           </div>
-          <div className="chart-container">
-            <div className="chart-wrapper" style={{ height: 320 }}>
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={barData} layout="vertical" margin={{ left: 8, right: 24, top: 8, bottom: 8 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(194,198,211,0.15)" horizontal={false} />
-                  <XAxis type="number" tickFormatter={(v: number) => formatCurrency(v, true)} tick={{ fontSize: 11, fill: '#424751' }} axisLine={false} tickLine={false} />
-                  <YAxis type="category" dataKey="shortName" tick={{ fontSize: 11, fill: '#424751', fontWeight: 600 }} axisLine={false} tickLine={false} width={70} />
-                  <Tooltip
-                    content={({ active, payload, label }) => {
-                      if (!active || !payload?.length) return null
-                      return (
-                        <div className="custom-tooltip">
-                          <div className="custom-tooltip-label">{label}</div>
-                          {payload.map((p, i) => (
-                            <div className="custom-tooltip-row" key={i}>
-                              <div className="custom-tooltip-dot" style={{ background: p.color }} />
-                              <span className="custom-tooltip-name">{p.name}</span>
-                              <span className="custom-tooltip-value">{formatCurrency(p.value as number)}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    }}
-                  />
-                  <Bar dataKey="previous" name={getFiscalYearLabel(prevFY.fiscalYear)} fill="var(--secondary-fixed-dim)" radius={[0, 4, 4, 0]} barSize={14} />
-                  <Bar dataKey="approved" name={getFiscalYearLabel(latestFY.fiscalYear)} fill="var(--primary)" radius={[0, 4, 4, 0]} barSize={14} />
-                </BarChart>
-              </ResponsiveContainer>
+          
+          <div className="w-full flex-grow h-[320px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={barData} layout="vertical" margin={{ left: 0, right: 20, top: 0, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(194,198,211,0.15)" horizontal={false} />
+                <XAxis type="number" tickFormatter={(v: number) => formatCurrency(v, true)} tick={{ fontSize: 11, fill: '#71717a' }} axisLine={false} tickLine={false} />
+                <YAxis type="category" dataKey="shortName" tick={{ fontSize: 11, fill: '#71717a', fontWeight: 600 }} axisLine={false} tickLine={false} width={80} />
+                <Tooltip
+                  cursor={{fill: 'rgba(0,0,0,0.05)'}}
+                  content={({ active, payload, label }) => {
+                    if (!active || !payload?.length) return null
+                    return (
+                      <div className="bg-white dark:bg-zinc-800 p-3 shadow-lg border border-zinc-200 dark:border-zinc-700 text-sm">
+                        <div className="font-bold mb-2 text-zinc-900 dark:text-zinc-100">{label}</div>
+                        {payload.map((p, i) => (
+                          <div className="flex items-center gap-2 mb-1" key={i}>
+                            <div className="w-2 h-2" style={{ background: p.color }} />
+                            <span className="text-zinc-600 dark:text-zinc-400 w-16">{p.name}</span>
+                            <span className="font-medium text-zinc-900 dark:text-zinc-100">{formatCurrency(p.value as number)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )
+                  }}
+                />
+                <Bar dataKey="previous" name={getFiscalYearLabel(prevFY.fiscalYear)} fill="#a1a1aa" radius={[0, 4, 4, 0]} barSize={16} />
+                <Bar dataKey="approved" name={getFiscalYearLabel(latestFY.fiscalYear)} fill="#9e001f" radius={[0, 4, 4, 0]} barSize={16} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="flex justify-end gap-6 mt-4">
+            <div className="flex items-center gap-2 text-xs font-bold text-secondary">
+              <div className="w-3 h-3 bg-zinc-400 dark:bg-zinc-600" />
+              <span>{getFiscalYearLabel(prevFY.fiscalYear)}</span>
             </div>
-            <div className="chart-legend">
-              <div className="legend-chip">
-                <div className="legend-chip-dot" style={{ background: 'var(--secondary-fixed-dim)' }} />
-                <span className="legend-chip-label">{getFiscalYearLabel(prevFY.fiscalYear)}</span>
-              </div>
-              <div className="legend-chip">
-                <div className="legend-chip-dot" style={{ background: 'var(--primary)' }} />
-                <span className="legend-chip-label">{getFiscalYearLabel(latestFY.fiscalYear)}</span>
-              </div>
+            <div className="flex items-center gap-2 text-xs font-bold text-primary">
+              <div className="w-3 h-3 bg-primary" />
+              <span>{getFiscalYearLabel(latestFY.fiscalYear)}</span>
             </div>
           </div>
         </div>
+
       </div>
 
-      {/* Auditor's Note */}
-      <div className="auditor-note" id="auditor-note">
-        <div className="auditor-note-label">Auditor's Note</div>
-        <p className="auditor-note-text">
-          Average education budget growth stands at {data.metadata.averageGrowthRates.education}% annually, 
-          while municipal operations have averaged {data.metadata.averageGrowthRates.municipal}% — a structural trend 
-          worth monitoring as education continues to command the majority of Winchester's fiscal resources.
-        </p>
-      </div>
-
-      {/* Detailed Table */}
-      <div className="section-block" id="detailed-table">
-        <div className="section-header">
+      {/* Accessible Table Section */}
+      <section className="bg-white dark:bg-zinc-900 p-10 shadow-[0_20px_40px_rgba(26,28,28,0.06)] border border-zinc-200 dark:border-zinc-800 mb-16 overflow-hidden">
+        <div className="flex flex-col md:flex-row justify-between items-baseline mb-8 gap-4">
           <div>
-            <h2 className="section-title">Historical Budget Data</h2>
-            <p className="section-subtitle">
-              All figures from Special Town Meeting approved budgets, FY2016–FY2025
-            </p>
+            <h2 className="text-3xl font-black tracking-tighter text-on-background">Historical Budget Data</h2>
+            <p className="text-sm text-secondary">All figures from Special Town Meeting approved budgets, FY2016–FY2025.</p>
           </div>
-          <a
-            href={data.metadata.sourceLinks.FY2026}
-            className="source-link"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <FileText size={14} />
-            Source Data
-          </a>
+          <div className="flex items-center gap-4">
+            <button className="text-xs font-bold text-primary uppercase tracking-widest border-b-2 border-primary pb-1">Special Town Meeting</button>
+          </div>
         </div>
-        <div className="data-table-wrapper">
-          <table className="data-table">
+        
+        <div className="overflow-x-auto pb-4">
+          <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
-              <tr>
-                <th>Fiscal Year</th>
-                <th className="number">Education</th>
-                <th className="number">Change</th>
-                <th className="number">Municipal</th>
-                <th className="number">Change</th>
-                <th className="number">DPW</th>
-                <th className="number">Public Safety</th>
-                <th className="number">General Gov</th>
+              <tr className="border-b border-surface-container dark:border-zinc-800">
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary">Fiscal Year</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Education</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Change</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Municipal</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Change</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">DPW</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">Public Safety</th>
+                <th className="py-4 text-[10px] font-bold uppercase tracking-widest text-secondary text-right">General Gov</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-surface-container/50 dark:divide-zinc-800/50">
               {completeFYs.map((fy) => (
-                <tr key={fy.fiscalYear}>
-                  <td>
-                    <strong>{getFiscalYearLabel(fy.fiscalYear)}</strong>
+                <tr className="hover:bg-surface-container-low dark:hover:bg-zinc-800/50 transition-colors" key={fy.fiscalYear}>
+                  <td className="py-5 font-bold text-on-background border-r border-surface-container dark:border-zinc-800/50 pr-4">
+                    {getFiscalYearLabel(fy.fiscalYear)}
                   </td>
-                  <td className="number">{formatCurrency(fy.education)}</td>
-                  <td className={`number ${getChangeClass(fy.percentChange.education)}`}>
-                    {formatPercent(fy.percentChange.education)}
+                  <td className="py-5 text-sm text-right text-zinc-700 dark:text-zinc-300 pr-4">{formatCurrency(fy.education)}</td>
+                  <td className="py-5 text-right border-r border-surface-container dark:border-zinc-800/50 pr-4">
+                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${fy.percentChange.education && fy.percentChange.education >= 8 ? 'bg-error/10 text-error' : fy.percentChange.education && fy.percentChange.education > 0 ? 'bg-success/10 text-success' : 'bg-zinc-100 text-zinc-500'}`}>
+                      {formatPercent(fy.percentChange.education)}
+                    </span>
                   </td>
-                  <td className="number">{fy.municipal ? formatCurrency(fy.municipal) : '—'}</td>
-                  <td className={`number ${getChangeClass(fy.percentChange.municipal)}`}>
-                    {formatPercent(fy.percentChange.municipal)}
+                  <td className="py-5 text-sm text-right text-zinc-700 dark:text-zinc-300 pr-4">{fy.municipal ? formatCurrency(fy.municipal) : '—'}</td>
+                  <td className="py-5 text-right border-r border-surface-container dark:border-zinc-800/50 pr-4">
+                    <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${fy.percentChange.municipal && fy.percentChange.municipal >= 8 ? 'bg-error/10 text-error' : fy.percentChange.municipal && fy.percentChange.municipal > 0 ? 'bg-success/10 text-success' : 'bg-zinc-100 text-zinc-500'}`}>
+                      {formatPercent(fy.percentChange.municipal)}
+                    </span>
                   </td>
-                  <td className="number">{fy.dpw ? formatCurrency(fy.dpw) : '—'}</td>
-                  <td className="number">{fy.publicSafety ? formatCurrency(fy.publicSafety) : '—'}</td>
-                  <td className="number">{fy.generalGovernment ? formatCurrency(fy.generalGovernment) : '—'}</td>
+                  <td className="py-5 text-sm text-right text-zinc-700 dark:text-zinc-300 pr-4">{fy.dpw ? formatCurrency(fy.dpw) : '—'}</td>
+                  <td className="py-5 text-sm text-right text-zinc-700 dark:text-zinc-300 pr-4">{fy.publicSafety ? formatCurrency(fy.publicSafety) : '—'}</td>
+                  <td className="py-5 text-sm text-right text-zinc-700 dark:text-zinc-300">{fy.generalGovernment ? formatCurrency(fy.generalGovernment) : '—'}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* School-Level Breakdown */}
-      <div className="section-block" id="school-breakdown">
-        <div className="section-header">
-          <div>
-            <h2 className="section-title">School-Level Expenditure</h2>
-            <p className="section-subtitle">
-              Per-school budget allocation and staffing metrics
-            </p>
-          </div>
+        <div className="mt-8 flex justify-end">
+          <a href={data.metadata.sourceLinks.FY2026} target="_blank" rel="noreferrer">
+            <button className="bg-primary text-on-primary px-6 py-3 font-bold text-xs uppercase tracking-[0.2em] active:scale-95 duration-200">Full Source Data Export</button>
+          </a>
         </div>
+      </section>
 
-        <div className="stat-pills">
-          <div className="stat-pill">
-            <Building2 size={14} />
-            Total Enrollment: <span className="stat-pill-value">{schoolData.districtTotals.totalEnrollment.toLocaleString()}</span>
-          </div>
-          <div className="stat-pill">
-            <DollarSign size={14} />
-            Per-Pupil Spend: <span className="stat-pill-value">{formatCurrency(schoolData.districtTotals.perPupilSpend)}</span>
-          </div>
-          <div className="stat-pill">
-            <Landmark size={14} />
-            Total FTE: <span className="stat-pill-value">{schoolData.districtTotals.totalFTE}</span>
-          </div>
-        </div>
 
-        <div style={{ marginTop: 'var(--space-lg)' }}>
-          <h3 className="title-md" style={{ marginBottom: 'var(--space-md)' }}>Secondary Schools</h3>
-          <div className="school-cards-grid">
-            {[schoolData.middleSchool, schoolData.highSchool].map((school) => (
-              <div className="school-card" key={school.name}>
-                <div className="school-card-name">{school.name}</div>
-                <div className="school-card-stat">
-                  <span className="school-card-stat-label">Budget</span>
-                  <span className="school-card-stat-value">{formatCurrency(school.totalBudget, true)}</span>
-                </div>
-                <div className="school-card-stat">
-                  <span className="school-card-stat-label">Enrollment</span>
-                  <span className="school-card-stat-value">{school.enrollment?.toLocaleString()}</span>
-                </div>
-                <div className="school-card-stat">
-                  <span className="school-card-stat-label">Per Pupil</span>
-                  <span className="school-card-stat-value">{formatCurrency(school.perPupilSpend!)}</span>
-                </div>
-                <div className="school-card-stat">
-                  <span className="school-card-stat-label">FTE</span>
-                  <span className="school-card-stat-value">{school.fte}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div style={{ marginTop: 'var(--space-xl)' }}>
-          <h3 className="title-md" style={{ marginBottom: 'var(--space-md)' }}>Elementary Schools</h3>
-          <div className="school-cards-grid">
-            {schoolData.elementarySchools.map((school) => (
-              <div className="school-card" key={school.name}>
-                <div className="school-card-name">{school.name}</div>
-                <div className="school-card-stat">
-                  <span className="school-card-stat-label">Budget</span>
-                  <span className="school-card-stat-value">{formatCurrency(school.totalBudget, true)}</span>
-                </div>
-                <div className="school-card-stat">
-                  <span className="school-card-stat-label">Classrooms</span>
-                  <span className="school-card-stat-value">{school.classrooms}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
     </>
   )
-}
-
-function getChangeClass(pct: number | null): string {
-  if (pct === null) return ''
-  if (pct >= 8) return 'change-high'
-  if (pct > 0) return 'change-positive'
-  return 'change-negative'
 }
