@@ -64,7 +64,7 @@ export default function SummaryPage() {
     { name: 'Health & Social', value: latestFY.healthSocialServices!, color: CATEGORY_COLORS.healthSocialServices },
     { name: 'Culture & Rec', value: latestFY.cultureRecreation!, color: CATEGORY_COLORS.cultureRecreation },
     { name: 'General Gov', value: latestFY.generalGovernment!, color: CATEGORY_COLORS.generalGovernment },
-  ], [latestFY])
+  ].sort((a, b) => b.value - a.value), [latestFY])
 
   // Bar chart: budget vs actual (simulated with approved)
   const barData = useMemo(() => {
