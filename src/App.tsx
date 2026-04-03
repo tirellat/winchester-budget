@@ -3,7 +3,7 @@ import Layout from './components/Layout'
 import SummaryPage from './pages/SummaryPage'
 import TrendsPage from './pages/TrendsPage'
 import RawDataPage from './pages/RawDataPage'
-import DetailedBudgetPage from './pages/DetailedBudgetPage'
+import WPSBudgetPage from './pages/WPSBudgetPage'
 import './firebase'
 import './App.css'
 
@@ -15,7 +15,7 @@ function App() {
           <Route path="/" element={<Navigate to="/summary" replace />} />
           <Route path="/summary" element={<SummaryPage />} />
           <Route path="/trends" element={<TrendsPage />} />
-          <Route path="/detailed/:orgId?" element={<DetailedBudgetPage />} />
+          <Route path="/wps/:orgId?" element={<WPSBudgetPage />} />
           <Route path="/raw-data" element={<RawDataPage />} />
         </Route>
       </Routes>

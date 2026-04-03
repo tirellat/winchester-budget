@@ -23,8 +23,8 @@ const Breadcrumbs: React.FC = () => {
         
         // Map common paths to readable names
         let name = value.toUpperCase();
-        if (value === 'detailed') name = 'WPS DETAILED BUDGET';
-        if (index === 1 && pathnames[0] === 'detailed') {
+        if (value === 'wps') name = 'WPS BUDGET';
+        if (index === 1 && pathnames[0] === 'wps') {
             name = getOrgName(value).toUpperCase();
         }
 

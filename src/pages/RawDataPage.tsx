@@ -1,7 +1,12 @@
+import { useMemo } from 'react'
 import { getBudgetData, formatCurrency, getFiscalYearLabel } from '../data/budgetUtils'
 
 export default function RawDataPage() {
   const data = getBudgetData()
+
+  const sortedFYs = useMemo(() => {
+    return [...data.fiscalYears].sort((a, b) => b.fiscalYear.localeCompare(a.fiscalYear))
+  }, [data.fiscalYears])
 
   return (
     <div className="max-w-7xl mx-auto">
@@ -28,7 +33,7 @@ export default function RawDataPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
-              {data.fiscalYears.map((fy) => (
+              {sortedFYs.map((fy) => (
                 <tr key={fy.fiscalYear} className="hover:bg-zinc-50/50 dark:hover:bg-zinc-800/50 transition-colors">
                   <td className="p-4 font-bold text-on-surface whitespace-nowrap">
                     {getFiscalYearLabel(fy.fiscalYear)}

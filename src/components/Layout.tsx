@@ -23,8 +23,8 @@ export default function Layout() {
             <NavLink to="/summary" className={getTopNavLinkClass} id="nav-summary">
               Summary
             </NavLink>
-            <NavLink to="/detailed" className={getTopNavLinkClass} id="nav-detailed">
-              WPS Detailed Review
+            <NavLink to="/wps" className={getTopNavLinkClass} id="nav-wps">
+              WPS Budget
             </NavLink>
             <NavLink to="/trends" className={getTopNavLinkClass} id="nav-trends">
               Trends
@@ -53,9 +53,9 @@ export default function Layout() {
             <span className="material-symbols-outlined">dashboard</span>
             <span className="font-medium text-sm">Overview</span>
           </NavLink>
-          <NavLink to="/detailed" className={getSideNavLinkClass}>
+          <NavLink to="/wps" className={getSideNavLinkClass}>
             <span className="material-symbols-outlined">account_tree</span>
-            <span className="font-medium text-sm">WPS Detailed Review</span>
+            <span className="font-medium text-sm">WPS Budget</span>
           </NavLink>
           <NavLink to="/trends" className={getSideNavLinkClass}>
             <span className="material-symbols-outlined">trending_up</span>
