@@ -285,7 +285,7 @@ export default function SummaryPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-surface-container/50 dark:divide-zinc-800/50">
-              {completeFYs.map((fy) => (
+              {[...completeFYs].reverse().map((fy) => (
                 <tr className="hover:bg-surface-container-low dark:hover:bg-zinc-800/50 transition-colors" key={fy.fiscalYear}>
                   <td className="py-5 font-bold text-on-background border-r border-surface-container dark:border-zinc-800/50 pr-4">
                     {getFiscalYearLabel(fy.fiscalYear)}
