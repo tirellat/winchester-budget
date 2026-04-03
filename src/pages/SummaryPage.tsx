@@ -265,9 +265,6 @@ export default function SummaryPage() {
             <h2 className="text-3xl font-black tracking-tighter text-on-background">Historical Budget Data</h2>
             <p className="text-sm text-secondary">All figures from Special Town Meeting approved budgets, FY2016–FY2025.</p>
           </div>
-          <div className="flex items-center gap-4">
-            <button className="text-xs font-bold text-primary uppercase tracking-widest border-b-2 border-primary pb-1">Special Town Meeting</button>
-          </div>
         </div>
         
         <div className="overflow-x-auto pb-4">
