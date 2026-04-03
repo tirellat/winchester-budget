@@ -27,16 +27,27 @@ type SortConfig = {
   direction: 'asc' | 'desc';
 } | null;
 
-export default function DetailedBudgetPage() {
+export default function WPSBudgetPage() {
   const { orgId } = useParams<{ orgId?: string }>();
   const navigate = useNavigate();
   const summary = getBudgetSummary();
   const isDrilledDown = !!orgId;
   
-  const [sortConfig, setSortConfig] = useState<SortConfig>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
+    key: isDrilledDown ? 'FY26 Recommended Budget ($)' : 'FY26 Proposed Total Spending',
+    direction: 'desc'
+  });
 
   const orgName = useMemo(() => orgId ? getOrgName(orgId) : 'WPS District Summary', [orgId]);
   const details = useMemo(() => orgId ? getOrgDetails(orgId) : [], [orgId]);
+
+  // Reset sort when drilling down/up
+  useMemo(() => {
+    setSortConfig({
+      key: orgId ? 'FY26 Recommended Budget ($)' : 'FY26 Proposed Total Spending',
+      direction: 'desc'
+    });
+  }, [orgId]);
 
   const handleSort = (key: string) => {
     let direction: 'asc' | 'desc' = 'asc';
@@ -156,7 +167,7 @@ export default function DetailedBudgetPage() {
       <header className="mb-12">
         <div className="flex items-center gap-4 mb-4">
           {isDrilledDown && (
-            <Link to="/detailed" className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+            <Link to="/wps" className="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
               <ArrowLeft className="w-6 h-6 text-primary" />
             </Link>
           )}
@@ -424,9 +435,9 @@ export default function DetailedBudgetPage() {
                   const id = s["Cost Center (Org)"].match(/\((\d+)\)/)?.[1];
                   const growth = parseFloat(s["% Change FY25 VS FY26 Budget"].replace('%', ''));
                   return (
-                    <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer" onClick={() => navigate(`/detailed/${id}`)}>
+                    <tr key={idx} className="hover:bg-zinc-50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer" onClick={() => navigate(`/wps/${id}`)}>
                       <td className="px-8 py-5">
-                        <Link to={`/detailed/${id}`} className="text-base font-black text-on-background group-hover:text-primary transition-colors flex items-center gap-2">
+                        <Link to={`/wps/${id}`} className="text-base font-black text-on-background group-hover:text-primary transition-colors flex items-center gap-2">
                           {s["Cost Center (Org)"].split(' (')[0]}
                           <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                         </Link>
